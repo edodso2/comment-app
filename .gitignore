@@ -27,3 +27,6 @@ Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
+
+# remove firebase config from repo
+src/resources/firebase-config.js

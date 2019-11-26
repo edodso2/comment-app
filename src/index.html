@@ -23,20 +23,11 @@
     <!-- Add Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-firestore.js"></script>
-
+    
+    <!-- Init firebase -->
+    <script src="./resources/firebase-config.js"></script>
+    
     <script>
-      // init firebase
-      const firebaseConfig = {
-        apiKey: 'AIzaSyBqBOPMJS-Cv0U_X-ofdGGty0UdBCGm8kQ',
-        authDomain: 'tigerfacesystems.firebaseapp.com',
-        databaseURL: 'https://tigerfacesystems.firebaseio.com',
-        projectId: 'tigerfacesystems',
-        storageBucket: 'tigerfacesystems.appspot.com',
-        messagingSenderId: '935022060242',
-        appId: '1:935022060242:web:2ad17db0aaf93cd2d4c30b'
-      };
-      firebase.initializeApp(firebaseConfig);
-
       // set firebase instance on comments app
       window.onload = function() {
         const commentApp = document.querySelector('tfs-comment-app');

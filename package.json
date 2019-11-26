@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "concat": "^1.0.3",
     "husky": "^3.1.0",
     "lint-staged": "^9.4.3"
   },
@@ -40,7 +41,7 @@
   },
   "repository": "edodso2/tfs-comments",
   "scripts": {
-    "build": "lwc-services build -m production",
+    "build": "lwc-services build -m production && node build/build.js",
     "build:development": "lwc-services build",
     "lint": "eslint ./src/**/*.ts",
     "prettier": "prettier --write '**/*.{css,html,js,json,md,ts,yaml,yml}'",

@@ -1,0 +1,12 @@
+<template>
+  <div if:true={isInitialized}>
+    <tfs-comment-form-wrapper
+      if:false={hideCommentForm}
+      is-authenticated={isAuthenticated}
+      onsigninclick={signIn}
+      onformsubmit={handleFormSubmission}
+    >
+    </tfs-comment-form-wrapper>
+    <tfs-comment-list comments={commentList}></tfs-comment-list>
+  </div>
+</template>

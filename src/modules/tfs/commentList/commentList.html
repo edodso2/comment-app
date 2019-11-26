@@ -1,0 +1,7 @@
+<template>
+  <div if:true={showComments}>
+    <template for:each={comments} for:item="comment">
+      <tfs-comment key={comment.id} comment={comment}></tfs-comment>
+    </template>
+  </div>
+</template>

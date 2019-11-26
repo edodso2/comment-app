@@ -1,0 +1,20 @@
+<template>
+  <form class="comment-form" onsubmit={submitForm} novalidate>
+    <textarea
+      value={comment}
+      placeholder="Enter comment..."
+      class={textareaClassList}
+      required
+      minlength={commentMinLength}
+      maxlength={commentMaxLength}
+      onfocus={handleFocus}
+      onblur={handleBlur}
+      oninput={handleInput}
+      onkeydown={handleKeyDown}
+    >
+    </textarea>
+    <input type="submit" class="submit-button" />
+    <div class="comment-text-error">{textareaError}</div>
+    <tfs-comment-form-helper-text></tfs-comment-form-helper-text>
+  </form>
+</template>

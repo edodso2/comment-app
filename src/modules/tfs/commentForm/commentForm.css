@@ -1,0 +1,53 @@
+.comment-form {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.comment-text {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100px;
+  width: 100%;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+  resize: none;
+  font-size: 1rem;
+  color: #303030;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.comment-text:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.comment-text.invalid {
+  border-color: #dc3545;
+}
+
+.comment-text.invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.comment-text.invalid ~ .comment-text-error {
+  display: block;
+}
+
+.comment-text-error {
+  display: none;
+  font-size: 14px;
+  margin-top: 4px;
+  color: rgb(201, 22, 22);
+}
+
+.submit-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 0;
+}

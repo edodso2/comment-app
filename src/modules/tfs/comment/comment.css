@@ -1,0 +1,31 @@
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-img {
+  display: block;
+  width: 45px;
+  height: 45px;
+  margin-right: 14px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.profile-info {
+  color: #303030;
+}
+
+.profile-name {
+  margin-bottom: 4px;
+}
+
+.profile-date {
+  font-size: 12px;
+  color: #6d6d6d;
+}
+
+.comment {
+  color: #303030;
+  margin-top: 16px;
+}

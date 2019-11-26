@@ -1,0 +1,10 @@
+tfs-comment {
+  display: block;
+  padding-top: 16px;
+  margin-top: 2px;
+  border-top: 1px solid #ddd;
+}
+
+tfs-comment ~ tfs-comment {
+  margin-top: 16px;
+}

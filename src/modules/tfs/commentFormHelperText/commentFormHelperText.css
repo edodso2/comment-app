@@ -1,0 +1,33 @@
+.helper-text {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 75px;
+  height: 45px;
+  margin: auto;
+  color: #979797;
+  background-color: rgb(219, 219, 219);
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 5px;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.helper-text-keys {
+  font-weight: bold;
+  margin-bottom: 2px;
+  pointer-events: none;
+}
+
+.helper-text.hidden {
+  opacity: 0;
+}

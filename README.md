@@ -81,7 +81,7 @@ To run the project locally:
 
 1. `git clone https://github.com/edodso2/comment-app.git`
 2. `npm install`
-3. `npm watch`
+3. `npm run watch`
 
 ## Contributing
 

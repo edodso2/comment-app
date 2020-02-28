@@ -1,5 +1,7 @@
 declare const firebase: firebase.app.App;
 
+import User from './user';
+
 /**
  * Comment
  *
@@ -17,6 +19,7 @@ export default class Comment {
   userPhoto: string;
   date: Date;
   comment: string;
+  likes: User[];
 
   constructor(
     id?: string,
@@ -24,7 +27,8 @@ export default class Comment {
     userName?: string,
     userPhoto?: string,
     date?: Date,
-    comment?: string
+    comment?: string,
+    likes?: User[]
   ) {
     this.id = id;
     this.uid = uid;
@@ -32,6 +36,7 @@ export default class Comment {
     this.userPhoto = userPhoto;
     this.date = date;
     this.comment = comment;
+    this.likes = likes;
   }
 
   toFirebaseData() {
@@ -41,7 +46,16 @@ export default class Comment {
       userName: this.userName,
       userPhoto: this.userPhoto,
       date: (firebase.firestore as any).Timestamp.fromDate(this.date),
-      comment: this.comment
+      comment: this.comment,
+      likes: this.likes
+        ? this.likes.map(u => {
+            return {
+              uid: u.uid,
+              userName: u.userName,
+              userPhoto: u.userPhoto
+            };
+          })
+        : []
     };
   }
 
@@ -54,7 +68,8 @@ export default class Comment {
       data.userName,
       data.userPhoto,
       data.date.toDate(),
-      data.comment
+      data.comment,
+      data.likes
     );
   }
 }

@@ -84,6 +84,28 @@ export default class CommentService {
     };
   }
 
+  async updateComment(
+    id: string,
+    comment: Comment
+  ): Promise<CommentServiceResponse<Comment>> {
+    let error: Error;
+
+    try {
+      // get the current comment
+      const currentComment = this.topicComments.doc(id);
+
+      // update the current comment with the new data
+      await currentComment.update(comment.toFirebaseData());
+    } catch (e) {
+      error = Error('Failed to update comment');
+    }
+
+    return {
+      data: comment,
+      error: error
+    };
+  }
+
   async deleteComment(id: string): Promise<CommentServiceResponse<boolean>> {
     let deleted = false;
     let error: Error;

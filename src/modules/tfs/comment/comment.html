@@ -31,22 +31,8 @@
   </div>
 
   <!-- Likes -->
-  <div class="like-info">
-    <div>
-      <img
-        if:false={isLiked}
-        class="like-button"
-        src="../../../resources/like.png"
-        onclick={likeComment}
-      />
-
-      <img
-        if:true={isLiked}
-        class="like-button"
-        src="../../../resources/unlike.png"
-        onclick={unlikeComment}
-      />
-    </div>
-    <div class="like-count">{likeCount}</div>
-  </div>
+  <tfs-comment-likes
+    comment={comment}
+    current-user={currentUser}
+  ></tfs-comment-likes>
 </template>

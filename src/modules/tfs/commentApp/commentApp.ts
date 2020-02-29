@@ -2,6 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import User from '../../../shared/user';
 import CommentService from '../../../shared/commentService';
 import Comment from '../../../shared/comment';
+import LikeService from '../../../shared/likeService';
 
 /**
  * Comment App
@@ -17,7 +18,7 @@ export default class CommentApp extends LightningElement {
   _firebase: firebase.app.App;
   _topicId: string;
   _commentService: CommentService;
-  _user: User;
+  _likeService: LikeService;
 
   /**
    * The firebase app (passed as reference)
@@ -59,6 +60,11 @@ export default class CommentApp extends LightningElement {
   @track commentList: Comment[] = [];
 
   /**
+   * The current authenticated user.
+   */
+  @track user: User;
+
+  /**
    * Only show the form if the user has not already
    * commented
    */
@@ -66,7 +72,7 @@ export default class CommentApp extends LightningElement {
     if (this.isAuthenticated && this.isInitialized) {
       return (
         this.commentList.find(
-          (comment: Comment) => comment.uid === this._user.uid
+          (comment: Comment) => comment.uid === this.user.uid
         ) !== undefined
       );
     }
@@ -83,6 +89,54 @@ export default class CommentApp extends LightningElement {
   }
 
   /**
+   * Handle a comment being liked by a user
+   * @param event The event with the comment to like
+   */
+  async handleLikeComment(event: CustomEvent) {
+    // get the comment to like and liking user from the event
+    const likedComment: Comment = event.detail.comment;
+    const likingUser: User = event.detail.user;
+
+    // like the comment as the current user
+    const likeResponse = await this._likeService.likeComment(
+      likedComment,
+      likingUser
+    );
+
+    if (likeResponse.error) {
+      // if successful, replace the old comment with the liked comment
+      const oldCommentIndex = this.commentList.findIndex(
+        c => c.id === likedComment.id
+      );
+      this.commentList.splice(oldCommentIndex, 1, likeResponse.data);
+    }
+  }
+
+  /**
+   * Handle a comment being unliked by a user
+   * @param event The event with the comment to unlike
+   */
+  async handleUnlikeComment(event: CustomEvent) {
+    // get the comment to unlike and unliking user from the event
+    const unlikedComment: Comment = event.detail.comment;
+    const unlikingUser: User = event.detail.user;
+
+    // unlike the comment as the current user
+    const unlikeResponse = await this._likeService.unlikeComment(
+      unlikedComment,
+      unlikingUser
+    );
+
+    if (!unlikeResponse.error) {
+      // if successful, replace the old comment with the unliked comment
+      const oldCommentIndex = this.commentList.findIndex(
+        c => c.id === unlikedComment.id
+      );
+      this.commentList.splice(oldCommentIndex, 1, unlikeResponse.data);
+    }
+  }
+
+  /**
    * Handles the comment form submission by adding
    * the comment to firebase
    * @param event
@@ -90,7 +144,7 @@ export default class CommentApp extends LightningElement {
   async handleFormSubmission(event: CustomEvent) {
     const res = await this._commentService.addComment(
       event.detail.value,
-      this._user
+      this.user
     );
     const comment = res.data;
     this.commentList.unshift(comment);
@@ -120,6 +174,9 @@ export default class CommentApp extends LightningElement {
     // instantiate comment service
     this._commentService = new CommentService(this.firebase, this.topicId);
 
+    // instantiate like service
+    this._likeService = new LikeService(this._commentService);
+
     // get the comments
     const res = await this._commentService.getComments();
     this.commentList = res.data;
@@ -144,7 +201,7 @@ export default class CommentApp extends LightningElement {
       userPhoto = user.providerData[0].photoURL;
     }
 
-    this._user = {
+    this.user = {
       uid: user.uid,
       userName,
       userPhoto

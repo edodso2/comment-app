@@ -7,6 +7,13 @@
       onformsubmit={handleFormSubmission}
     >
     </tfs-comment-form-wrapper>
-    <tfs-comment-list comments={commentList}></tfs-comment-list>
+
+    <tfs-comment-list
+      comments={commentList}
+      user={user}
+      onlikecomment={handleLikeComment}
+      onunlikecomment={handleUnlikeComment}
+    >
+    </tfs-comment-list>
   </div>
 </template>

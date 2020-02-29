@@ -42,7 +42,7 @@ export default class Comment extends LightningElement {
 
       // raise liked event
       const likedEvent = new CustomEvent('likecomment', {
-        detail: { comment: this.comment, user: this.currentUser },
+        detail: { comment: this.comment, userId: this.currentUser.uid },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -60,7 +60,7 @@ export default class Comment extends LightningElement {
 
       // raise unliked event
       const unlikedEvent = new CustomEvent('unlikecomment', {
-        detail: { comment: this.comment, user: this.currentUser },
+        detail: { comment: this.comment, userId: this.currentUser.uid },
         bubbles: true,
         cancelable: true,
         composed: true

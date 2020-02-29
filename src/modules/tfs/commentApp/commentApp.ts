@@ -4,6 +4,10 @@ import CommentService from '../../../shared/commentService';
 import Comment from '../../../shared/comment';
 import LikeService from '../../../shared/likeService';
 
+const BLOGS_COLLECTION = 'blogs';
+const COMMENTS_COLLECTION = 'comments';
+const LIKES_COLLECTION = 'likes';
+
 /**
  * Comment App
  * This is the root component of the project. It handles
@@ -95,12 +99,12 @@ export default class CommentApp extends LightningElement {
   async handleLikeComment(event: CustomEvent) {
     // get the comment to like and liking user from the event
     const likedComment: Comment = event.detail.comment;
-    const likingUser: User = event.detail.user;
+    const likingUserId: string = event.detail.userId;
 
     // like the comment as the current user
     const likeResponse = await this._likeService.likeComment(
       likedComment,
-      likingUser
+      likingUserId
     );
 
     if (likeResponse.error) {
@@ -119,12 +123,12 @@ export default class CommentApp extends LightningElement {
   async handleUnlikeComment(event: CustomEvent) {
     // get the comment to unlike and unliking user from the event
     const unlikedComment: Comment = event.detail.comment;
-    const unlikingUser: User = event.detail.user;
+    const unlikingUserId: string = event.detail.userId;
 
     // unlike the comment as the current user
     const unlikeResponse = await this._likeService.unlikeComment(
       unlikedComment,
-      unlikingUser
+      unlikingUserId
     );
 
     if (!unlikeResponse.error) {
@@ -171,11 +175,23 @@ export default class CommentApp extends LightningElement {
       }
     });
 
-    // instantiate comment service
-    this._commentService = new CommentService(this.firebase, this.topicId);
-
     // instantiate like service
-    this._likeService = new LikeService(this._commentService);
+    this._likeService = new LikeService(
+      this.firebase,
+      BLOGS_COLLECTION,
+      this.topicId,
+      COMMENTS_COLLECTION,
+      LIKES_COLLECTION
+    );
+
+    // instantiate comment service
+    this._commentService = new CommentService(
+      this.firebase,
+      this._likeService,
+      BLOGS_COLLECTION,
+      this.topicId,
+      COMMENTS_COLLECTION
+    );
 
     // get the comments
     const res = await this._commentService.getComments();

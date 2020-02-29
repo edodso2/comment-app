@@ -1,9 +1,7 @@
 import Comment from './comment';
 import User from './user';
 import ServiceResponse from './serviceResponse';
-
-const BLOGS_COLLECTION = 'blogs';
-const COMMENTS_COLLECTION = 'comments';
+import LikeService from './likeService';
 
 /**
  * Comment Service
@@ -14,6 +12,7 @@ const COMMENTS_COLLECTION = 'comments';
 export default class CommentService {
   private topicComments: firebase.firestore.CollectionReference;
   private firebase: firebase.app.App;
+  private likeService: LikeService;
 
   /**
    * Constructor
@@ -21,13 +20,21 @@ export default class CommentService {
    * @param topicId The id of the topic document to add/delete
    * comments on
    */
-  constructor(firebase: firebase.app.App, topicId: string) {
+  constructor(
+    firebase: firebase.app.App,
+    likeService: LikeService,
+    blogsCollectionName: string,
+    topicId: string,
+    commentsCollectionName: string
+  ) {
     this.firebase = firebase;
     this.topicComments = this.firebase
       .firestore()
-      .collection(BLOGS_COLLECTION)
+      .collection(blogsCollectionName)
       .doc(topicId)
-      .collection(COMMENTS_COLLECTION);
+      .collection(commentsCollectionName);
+
+    this.likeService = likeService;
   }
 
   async getComments(): Promise<ServiceResponse<Comment[]>> {
@@ -37,6 +44,15 @@ export default class CommentService {
     try {
       const query = await this.topicComments.get();
       comments = query.docs.map(doc => Comment.fromFirebaseDoc(doc));
+
+      // get the likes for each comment
+      await Promise.all(
+        comments.map(c =>
+          this.likeService
+            .getLikes(c.id)
+            .then(result => (c.likes = result.data))
+        )
+      );
     } catch (e) {
       error = Error('Failed to fetch comments');
     }
@@ -72,28 +88,6 @@ export default class CommentService {
       await doc.set(comment.toFirebaseData());
     } catch (e) {
       error = Error('Failed to add comment');
-    }
-
-    return {
-      data: comment,
-      error: error
-    };
-  }
-
-  async updateComment(
-    id: string,
-    comment: Comment
-  ): Promise<ServiceResponse<Comment>> {
-    let error: Error;
-
-    try {
-      // get the current comment
-      const currentComment = this.topicComments.doc(id);
-
-      // update the current comment with the new data
-      await currentComment.update(comment.toFirebaseData());
-    } catch (e) {
-      error = Error('Failed to update comment');
     }
 
     return {

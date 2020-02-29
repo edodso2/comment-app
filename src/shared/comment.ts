@@ -36,7 +36,7 @@ export default class Comment {
     this.userPhoto = userPhoto;
     this.date = date;
     this.comment = comment;
-    this.likes = likes;
+    this.likes = likes || [];
   }
 
   toFirebaseData() {

@@ -1,13 +1,9 @@
 import Comment from './comment';
 import User from './user';
+import ServiceResponse from './serviceResponse';
 
 const BLOGS_COLLECTION = 'blogs';
 const COMMENTS_COLLECTION = 'comments';
-
-interface CommentServiceResponse<T> {
-  data: T;
-  error: Error;
-}
 
 /**
  * Comment Service
@@ -34,7 +30,7 @@ export default class CommentService {
       .collection(COMMENTS_COLLECTION);
   }
 
-  async getComments(): Promise<CommentServiceResponse<Comment[]>> {
+  async getComments(): Promise<ServiceResponse<Comment[]>> {
     let comments: Comment[];
     let error: Error;
 
@@ -54,7 +50,7 @@ export default class CommentService {
   async addComment(
     commentText: string,
     user: User
-  ): Promise<CommentServiceResponse<Comment>> {
+  ): Promise<ServiceResponse<Comment>> {
     let error: Error;
     let comment: Comment;
 
@@ -87,7 +83,7 @@ export default class CommentService {
   async updateComment(
     id: string,
     comment: Comment
-  ): Promise<CommentServiceResponse<Comment>> {
+  ): Promise<ServiceResponse<Comment>> {
     let error: Error;
 
     try {
@@ -106,7 +102,7 @@ export default class CommentService {
     };
   }
 
-  async deleteComment(id: string): Promise<CommentServiceResponse<boolean>> {
+  async deleteComment(id: string): Promise<ServiceResponse<boolean>> {
     let deleted = false;
     let error: Error;
 

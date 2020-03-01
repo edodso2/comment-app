@@ -73,7 +73,7 @@ export default class CommentApp extends LightningElement {
    * commented
    */
   get hideCommentForm() {
-    if (this.isAuthenticated && this.isInitialized) {
+    if (this.isInitialized) {
       return (
         this.commentList.find(
           (comment: Comment) => comment.uid === this.user.uid

@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 
 import CommentObj from '../../../shared/comment';
+import User from '../../../shared/user';
 
 /**
  * Comment
@@ -11,6 +12,7 @@ export default class Comment extends LightningElement {
   @track showPlaceholderImg = false;
 
   @api comment: CommentObj;
+  @api currentUser: User;
 
   get commentDate() {
     return this.comment.date.toLocaleDateString();

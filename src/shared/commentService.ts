@@ -1,13 +1,7 @@
 import Comment from './comment';
 import User from './user';
-
-const BLOGS_COLLECTION = 'blogs';
-const COMMENTS_COLLECTION = 'comments';
-
-interface CommentServiceResponse<T> {
-  data: T;
-  error: Error;
-}
+import ServiceResponse from './serviceResponse';
+import LikeService from './likeService';
 
 /**
  * Comment Service
@@ -18,6 +12,7 @@ interface CommentServiceResponse<T> {
 export default class CommentService {
   private topicComments: firebase.firestore.CollectionReference;
   private firebase: firebase.app.App;
+  private likeService: LikeService;
 
   /**
    * Constructor
@@ -25,22 +20,39 @@ export default class CommentService {
    * @param topicId The id of the topic document to add/delete
    * comments on
    */
-  constructor(firebase: firebase.app.App, topicId: string) {
+  constructor(
+    firebase: firebase.app.App,
+    likeService: LikeService,
+    blogsCollectionName: string,
+    topicId: string,
+    commentsCollectionName: string
+  ) {
     this.firebase = firebase;
     this.topicComments = this.firebase
       .firestore()
-      .collection(BLOGS_COLLECTION)
+      .collection(blogsCollectionName)
       .doc(topicId)
-      .collection(COMMENTS_COLLECTION);
+      .collection(commentsCollectionName);
+
+    this.likeService = likeService;
   }
 
-  async getComments(): Promise<CommentServiceResponse<Comment[]>> {
+  async getComments(): Promise<ServiceResponse<Comment[]>> {
     let comments: Comment[];
     let error: Error;
 
     try {
       const query = await this.topicComments.get();
       comments = query.docs.map(doc => Comment.fromFirebaseDoc(doc));
+
+      // get the likes for each comment
+      await Promise.all(
+        comments.map(c =>
+          this.likeService
+            .getLikes(c.id)
+            .then(result => (c.likes = result.data))
+        )
+      );
     } catch (e) {
       error = Error('Failed to fetch comments');
     }
@@ -54,7 +66,7 @@ export default class CommentService {
   async addComment(
     commentText: string,
     user: User
-  ): Promise<CommentServiceResponse<Comment>> {
+  ): Promise<ServiceResponse<Comment>> {
     let error: Error;
     let comment: Comment;
 
@@ -84,7 +96,7 @@ export default class CommentService {
     };
   }
 
-  async deleteComment(id: string): Promise<CommentServiceResponse<boolean>> {
+  async deleteComment(id: string): Promise<ServiceResponse<boolean>> {
     let deleted = false;
     let error: Error;
 

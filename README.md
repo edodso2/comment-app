@@ -11,10 +11,11 @@ Easily integrate comments on any web site with (almost) zero code.
 
 ## How to use
 
-Using the comments app requires two steps:
+Using the comments app requires three steps:
 
 1. setting up a database
-2. adding the comments app web component to your site
+2. configuring database security rules
+3. adding the comments app web component to your site
 
 ### Setting up a database
 
@@ -43,6 +44,54 @@ steps are very generic and may require some additional reading of the firebase d
     };
     firebase.initializeApp(firebaseConfig);
   </script>
+```
+
+### Configuring database security rules
+
+The comments app suggests implementing a Firestore database with custom security rules. Failure to implement security rules will allow users
+to perform unauthorized operations, such as editing comments they do not own or liking comments multiple times. The following
+security rules will add default security in your Firestore comments app database. Modify these rules at your own risk.
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+		// The path to your topic's comment collection
+    match /blogs/{YOUR_TOPIC}/comments {
+
+    	// Set rules for all comments
+    	match /{comment}{
+
+      	// Allow all comments to be publicly read
+      	allow read: if true
+
+        // Allow any authenticated user to create a comment
+        // and prevent users from creating impersonated comments for other users
+        allow create: if request.auth.uid != null
+        							&& request.resource.data.uid == request.auth.uid
+
+        // Set rules for likes
+        match /likes/{like}{
+
+          // Allow all likes to be publicly read
+        	allow read: if true
+
+          // Allow any authenticated user to like a comment
+          // and prevent users from creating impersonated likes for other users
+          allow create: if request.auth.uid != null
+          							&& request.resource.data.uid == request.auth.uid
+
+          // Allow any authenticated user to unlike a comment
+          // and prevent users from deleting likes by other users
+          allow delete: if request.auth.uid != null
+          							&& resource.data.uid == request.auth.uid
+				}
+      }
+    }
+  }
+}
+
 ```
 
 ### Adding the comment app web component
@@ -81,7 +130,7 @@ To run the project locally:
 
 1. `git clone https://github.com/edodso2/comment-app.git`
 2. `npm install`
-3. `npm watch`
+3. `npm run watch`
 
 ## Contributing
 

@@ -1,3 +1,5 @@
+import Like from './like';
+
 declare const firebase: firebase.app.App;
 
 /**
@@ -17,6 +19,7 @@ export default class Comment {
   userPhoto: string;
   date: Date;
   comment: string;
+  likes: Like[];
 
   constructor(
     id?: string,
@@ -24,7 +27,8 @@ export default class Comment {
     userName?: string,
     userPhoto?: string,
     date?: Date,
-    comment?: string
+    comment?: string,
+    likes?: Like[]
   ) {
     this.id = id;
     this.uid = uid;
@@ -32,6 +36,7 @@ export default class Comment {
     this.userPhoto = userPhoto;
     this.date = date;
     this.comment = comment;
+    this.likes = likes || [];
   }
 
   toFirebaseData() {

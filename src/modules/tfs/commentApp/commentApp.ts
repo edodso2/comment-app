@@ -107,12 +107,14 @@ export default class CommentApp extends LightningElement {
       likingUserId
     );
 
-    //replace the old comment with the liked comment
-    const oldCommentIndex = this.commentList.findIndex(
-      c => c.id === likedComment.id
-    );
+    if (likeResponse.error) {
+      //if like failed, replace the liked comment with the unliked comment
+      const oldCommentIndex = this.commentList.findIndex(
+        c => c.id === likedComment.id
+      );
 
-    this.commentList.splice(oldCommentIndex, 1, likeResponse.data);
+      this.commentList.splice(oldCommentIndex, 1, likeResponse.data);
+    }
   }
 
   /**

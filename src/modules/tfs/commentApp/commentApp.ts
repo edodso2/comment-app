@@ -80,8 +80,8 @@ export default class CommentApp extends LightningElement {
             (comment: Comment) => comment.uid === this.user.uid
           ) !== undefined
         );
-      } 
-      
+      }
+
       return false;
     }
 
@@ -157,6 +157,14 @@ export default class CommentApp extends LightningElement {
     );
     const comment = res.data;
     this.commentList.unshift(comment);
+  }
+
+  /**
+   * Shows the sign in modal to authorize
+   * the user
+   */
+  handleUnauthorized() {
+    this.template.querySelector('tfs-comment-sign-in-modal').show();
   }
 
   /**

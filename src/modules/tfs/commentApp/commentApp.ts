@@ -70,15 +70,19 @@ export default class CommentApp extends LightningElement {
 
   /**
    * Only show the form if the user has not already
-   * commented
+   * commented or if the user is not signed in
    */
   get hideCommentForm() {
     if (this.isInitialized) {
-      return (
-        this.commentList.find(
-          (comment: Comment) => comment.uid === this.user.uid
-        ) !== undefined
-      );
+      if (this.isAuthenticated) {
+        return (
+          this.commentList.find(
+            (comment: Comment) => comment.uid === this.user.uid
+          ) !== undefined
+        );
+      }
+
+      return false;
     }
 
     return true;
@@ -153,6 +157,14 @@ export default class CommentApp extends LightningElement {
     );
     const comment = res.data;
     this.commentList.unshift(comment);
+  }
+
+  /**
+   * Shows the sign in modal to authorize
+   * the user
+   */
+  handleUnauthorized() {
+    this.template.querySelector('tfs-comment-sign-in-modal').show();
   }
 
   /**

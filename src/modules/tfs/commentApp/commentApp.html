@@ -3,8 +3,8 @@
     <tfs-comment-form-wrapper
       if:false={hideCommentForm}
       is-authenticated={isAuthenticated}
-      onsigninclick={signIn}
       onformsubmit={handleFormSubmission}
+      onunauthorized={handleUnauthorized}
     >
     </tfs-comment-form-wrapper>
 
@@ -13,7 +13,11 @@
       user={user}
       onlikecomment={handleLikeComment}
       onunlikecomment={handleUnlikeComment}
+      onunauthorized={handleUnauthorized}
     >
     </tfs-comment-list>
   </div>
+
+  <tfs-comment-sign-in-modal onsigninclick={signIn}>
+  </tfs-comment-sign-in-modal>
 </template>

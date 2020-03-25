@@ -1,4 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
+import { UnauthorizedEvent } from '../../../shared/unauthorizedEvent';
 
 /**
  * Comment Form Wrapper
@@ -12,6 +13,10 @@ export default class CommentFormWrapper extends LightningElement {
   @track showCommentForm = false;
 
   handleCommentClick() {
-    this.showCommentForm = true;
+    if (this.isAuthenticated) {
+      this.showCommentForm = true;
+    } else {
+      this.dispatchEvent(new UnauthorizedEvent());
+    }
   }
 }

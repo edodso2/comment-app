@@ -1,0 +1,11 @@
+<template>
+  <div if:true={visible} class="modal content-centered">
+    <h3>Sign In to Continue</h3>
+    <tfs-comment-sign-in-button></tfs-comment-sign-in-button>
+  </div>
+  <div
+    if:true={visible}
+    class="modal-backdrop"
+    onclick={handleBackdropClick}
+  ></div>
+</template>

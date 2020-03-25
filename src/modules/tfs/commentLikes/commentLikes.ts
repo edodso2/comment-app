@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import User from '../../../shared/user';
 import CommentObj from '../../../shared/comment';
+import { UnauthorizedEvent } from '../../../shared/unauthorizedEvent';
 
 export default class CommentLikes extends LightningElement {
   @track isLiked = false;
@@ -33,6 +34,8 @@ export default class CommentLikes extends LightningElement {
       });
 
       this.dispatchEvent(likedEvent);
+    } else {
+      this.dispatchEvent(new UnauthorizedEvent());
     }
   }
 
@@ -51,6 +54,8 @@ export default class CommentLikes extends LightningElement {
       });
 
       this.dispatchEvent(unlikedEvent);
+    } else {
+      this.dispatchEvent(new UnauthorizedEvent());
     }
   }
 
